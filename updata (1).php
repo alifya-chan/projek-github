@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
     $con = mysqli_connect("localhost", "teknolog_loginap", "e#]bv&=eofWS", "teknolog_CAD");
     
-    
+    //tes ubah
     $nama = $_POST["nama"];
     $nohp = $_POST["nohp"];
     $tanggal_lahir = $_POST["tanggal_lahir"];
