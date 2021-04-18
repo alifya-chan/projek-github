@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
     $con = mysqli_connect("localhost", "teknolog_loginap", "e#]bv&=eofWS", "teknolog_CAD");
+    //kk tambah code test
     
     //tes ubah
     $nama = $_POST["nama"];
