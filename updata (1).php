@@ -24,32 +24,36 @@ header('Content-Type: application/json');
     $riwayat_rokok = $_POST["riwayat_rokok"];
     $riwayat_koroner = $_POST["riwayat_koroner"];
     $date = $_POST["date"];
-    $ceknohp =mysql_num_rows (mysql_query("SELECT nohp FROM personal_info WHERE nohp='$_POST[nohp]'"));
     $flag=true;
 
-    if($ceknohp > 0) {
-         $response["success"] = false;  
-    }
-    
-    else{    
-    //query insert dijalankan
-    $statement = mysqli_prepare($con, "INSERT INTO personal_info(nama, nohp, tanggal_lahir, alamat, 
-    jenis_kelamin, berat_badan, tinggi_badan, bmi, tekanan_sistolik, 
-    tekanan_diastolik, total_kolesterol, ldl, hdl, 
-    triglyceride, riwayat_darah_tinggi, riwayat_diabetes, riwayat_dispilidemia, 
-    riwayat_koroner, riwayat_rokok, date) 
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    $checkStatement = mysqli_prepare($con, "SELECT nohp FROM personal_info WHERE nohp = ?");
+    mysqli_stmt_bind_param($checkStatement,"s", $nohp);
+    mysqli_stmt_execute($checkStatement);
+    mysqli_stmt_store_result($checkStatement);
 
-    mysqli_stmt_bind_param($statement, "sssssiisddddddssssss", $nama, $nohp, $tanggal_lahir, $alamat, $jenis_kelamin, $berat_badan, $tinggi_badan,
-     $bmi, $tekanan_sistolik, $tekanan_diastolik, $total_kolesterol, $ldl, $hdl, $triglyceride, $riwayat_darah_tinggi, $riwayat_diabetes,
-      $riwayat_dispilidemia, $riwayat_koroner, $riwayat_rokok, $date);
-    
-    mysqli_stmt_execute($statement);
-   
     $response = array();
-        $response["success"] = true;  
     
-    echo json_encode($response);       
+    if (mysqli_stmt_fetch($checkStatement)){
+
+        $response["success"] = false;
+
+    } else {
+        $response["success"] = true;  
+
+        $statement = mysqli_prepare($con, "INSERT INTO personal_info(nama, nohp, tanggal_lahir, alamat, 
+        jenis_kelamin, berat_badan, tinggi_badan, bmi, tekanan_sistolik, 
+        tekanan_diastolik, total_kolesterol, ldl, hdl, 
+        triglyceride, riwayat_darah_tinggi, riwayat_diabetes, riwayat_dispilidemia, 
+        riwayat_koroner, riwayat_rokok, date) 
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    
+        mysqli_stmt_bind_param($statement, "sssssiisddddddssssss", $nama, $nohp, $tanggal_lahir, $alamat, $jenis_kelamin, $berat_badan, $tinggi_badan,
+         $bmi, $tekanan_sistolik, $tekanan_diastolik, $total_kolesterol, $ldl, $hdl, $triglyceride, $riwayat_darah_tinggi, $riwayat_diabetes,
+          $riwayat_dispilidemia, $riwayat_koroner, $riwayat_rokok, $date);
+        mysqli_stmt_execute($statement);
     }
+    
+    echo json_encode($response);
+   
 
 ?>
